@@ -64,5 +64,17 @@ public class Eventlogger : MonoBehaviour
             meta = meta
         });
     }
+    public void LogPopup(Vector3 pos, string id = "")
+    {
+        if (!visualizer) return;
+
+        visualizer.events.Add(new EventScript
+        {
+            type = "popup",
+            pos = pos,
+            t = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+            meta = id
+        });
+    }
 
 }

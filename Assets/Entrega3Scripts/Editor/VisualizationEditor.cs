@@ -68,5 +68,22 @@ public class VisualizationEditor : Editor
                 Handles.DrawSolidDisc(pathPts[i], Vector3.up, v.heatRadius);
             }
         }
+
+        //Text popups
+        if (v.showPopups)
+        {
+            Handles.color = v.popupColor;
+            foreach (var e in v.events.Where(e => e.type == "popup"))
+            {
+                Handles.SphereHandleCap(
+                    0,
+                    e.pos + Vector3.up * 0.02f,
+                    Quaternion.identity,
+                    v.popupMarkerSize,
+                    EventType.Repaint
+                );
+            }
+        }
+
     }
 }

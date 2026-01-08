@@ -10,6 +10,11 @@ public class DataVisualizer : MonoBehaviour
     public bool showButtons = true;
     public bool showSwitches = true;
 
+    [Header("Popups")]
+    public bool showPopups = true;
+    public Color popupColor = Color.white;
+    public float popupMarkerSize = 0.25f;
+
     [Header("Path")]
     public Color pathColor = Color.cyan;
     public float pathWidth = 3f;
