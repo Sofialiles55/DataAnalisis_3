@@ -22,15 +22,7 @@ public class VisualizationEditor : Editor
             }
         }
 
-        // Button press
-        if (v.showButtons)
-        {
-            Handles.color = v.buttonColor;
-            foreach (var e in v.events.Where(e => e.type == "button"))
-            {
-                Handles.SphereHandleCap(0, e.pos + Vector3.up * y, Quaternion.identity, v.markerSize, EventType.Repaint);
-            }
-        }
+    
 
         //Switch
         if (v.showSwitches)

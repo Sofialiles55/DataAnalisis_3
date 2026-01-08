@@ -52,5 +52,17 @@ public class Eventlogger : MonoBehaviour
             meta = id
         });
     }
+    public void LogDeath(Vector3 pos, string meta = "")
+    {
+        if (!visualizer) return;
+
+        visualizer.events.Add(new EventScript
+        {
+            type = "death",
+            pos = pos,
+            t = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+            meta = meta
+        });
+    }
 
 }

@@ -14,9 +14,8 @@ public class DataVisualizer : MonoBehaviour
     public Color pathColor = Color.cyan;
     public float pathWidth = 3f;
 
-    [Header("Markers")]
+    [Header("Death")]
     public Color deathColor = Color.red;
-    public Color buttonColor = Color.yellow;
     public float markerSize = 0.3f;
 
     [Header("Heatmap")]
