@@ -8,6 +8,7 @@ public class DataVisualizer : MonoBehaviour
     public bool showHeatmap = true;
     public bool showDeaths = true;
     public bool showButtons = true;
+    public bool showSwitches = true;
 
     [Header("Path")]
     public Color pathColor = Color.cyan;
@@ -28,66 +29,16 @@ public class DataVisualizer : MonoBehaviour
     [Header("Data")]
     public List<EventScript> events = new();
 
-  
-    // Dummy data for testing 
- 
-    [ContextMenu("Generate Dummy Events")]
-    public void GenerateDummyEvents()
+    [Header("Switches")]
+    public Color switchColor = Color.magenta;
+    public float switchMarkerSize = 0.35f;
+
+    [Header("Runtime options")]
+    public bool clearEventsOnPlay = true;
+
+    private void Awake()
     {
-        events.Clear();
-
-        // Death
-        events.Add(new EventScript
-        {
-            type = "death",
-            pos = transform.position + new Vector3(2, 0, 2),
-            t = 1,
-            meta = ""
-        });
-
-        // Buttons
-        events.Add(new EventScript
-        {
-            type = "button",
-            pos = transform.position + new Vector3(-2, 0, 1),
-            t = 2,
-            meta = "E"
-        });
-
-        events.Add(new EventScript
-        {
-            type = "button",
-            pos = transform.position + new Vector3(0, 0, -3),
-            t = 3,
-            meta = "E"
-        });
-
-        // Path
-        for (int i = 0; i < 120; i++)
-        {
-            events.Add(new EventScript
-            {
-                type = "path",
-                pos = transform.position + new Vector3(i * 0.2f, 0, Mathf.Sin(i * 0.15f) * 2f),
-                t = 10 + i,
-                meta = ""
-            });
-        }
-
-        // Heatmap
-        for (int i = 0; i < 150; i++)
-        {
-            events.Add(new EventScript
-            {
-                type = "path",
-                pos = transform.position + new Vector3(
-                    8f + Random.Range(-1f, 1f),
-                    0,
-                    2f + Random.Range(-1f, 1f)
-                ),
-                t = 200 + i,
-                meta = ""
-            });
-        }
+        if (clearEventsOnPlay)
+            events.Clear();
     }
 }
