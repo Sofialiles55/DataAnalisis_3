@@ -5,6 +5,72 @@ using System.Linq;
 [CustomEditor(typeof(DataVisualizer))]
 public class VisualizationEditor : Editor
 {
+
+    public override void OnInspectorGUI()
+    {
+        // shows your normal DataVisualizer fields
+        DrawDefaultInspector();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Server Sync", EditorStyles.boldLabel);
+
+        var logger = Eventlogger.Instance;
+        if (logger == null)
+            logger = FindObjectOfType<Eventlogger>();
+
+        if (logger == null)
+        {
+            EditorGUILayout.HelpBox(
+                "Eventlogger not found in scene. Ensure TelemetrySystem exists.",
+                MessageType.Warning
+            );
+            return;
+        }
+
+        logger.selectedEventType =
+            (TelemetryEventType)EditorGUILayout.EnumPopup(
+                "Event Type",
+                logger.selectedEventType
+            );
+
+        logger.downloadSessionId =
+            EditorGUILayout.TextField(
+                "Download Session ID",
+                logger.downloadSessionId
+            );
+
+        logger.enableServerUpload =
+            EditorGUILayout.Toggle(
+                "Enable Server Upload",
+                logger.enableServerUpload
+            );
+
+        logger.enableServerDownload =
+            EditorGUILayout.Toggle(
+                "Enable Server Download",
+                logger.enableServerDownload
+            );
+
+        logger.serverUploadUrl =
+            EditorGUILayout.TextField(
+                "Upload URL",
+                logger.serverUploadUrl
+            );
+
+        logger.serverDownloadUrl =
+            EditorGUILayout.TextField(
+                "Download URL",
+                logger.serverDownloadUrl
+            );
+
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Upload (Filtered)"))
+            logger.UploadFiltered();
+
+        if (GUILayout.Button("Download (Filtered)"))
+            logger.DownloadFiltered();
+    }
     private void OnSceneGUI()
     {
         DataVisualizer v = (DataVisualizer)target;
@@ -28,7 +94,7 @@ public class VisualizationEditor : Editor
         if (v.showSwitches)
         {
             Handles.color = v.switchColor;
-            foreach (var e in v.events.Where(e => e.type == "switch"))
+            foreach (var e in v.events.Where(e => e.type == "switch_event"))
             {
                 Handles.SphereHandleCap(
                     0,
@@ -39,6 +105,23 @@ public class VisualizationEditor : Editor
                 );
             }
         }
+
+        //Enemy death
+        if (v.showEnemyDeaths)
+        {
+            Handles.color = v.enemyDeathColor;
+            foreach (var e in v.events.Where(e => e.type == "enemy_death"))
+            {
+                Handles.SphereHandleCap(
+                    0,
+                    e.pos + Vector3.up * 0.02f,
+                    Quaternion.identity,
+                    v.enemyDeathMarkerSize,
+                    EventType.Repaint
+                );
+            }
+        }
+
 
         // Collect path points once
         var pathPts = v.events

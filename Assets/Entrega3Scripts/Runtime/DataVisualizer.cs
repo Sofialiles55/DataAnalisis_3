@@ -37,6 +37,12 @@ public class DataVisualizer : MonoBehaviour
     public Color switchColor = Color.magenta;
     public float switchMarkerSize = 0.35f;
 
+    [Header("Enemy Deaths")]
+    public bool showEnemyDeaths = true;
+    public Color enemyDeathColor = new Color(1f, 0.5f, 0f);
+    public float enemyDeathMarkerSize = 0.35f;
+
+
     [Header("Runtime options")]
     public bool clearEventsOnPlay = true;
 
