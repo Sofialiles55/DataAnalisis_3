@@ -34,6 +34,7 @@ public class Eventlogger : MonoBehaviour
 
     [Tooltip("Session ID to download from server (set this in inspector)")]
     public string downloadSessionId = "";
+    public string userId = "";
 
     [Header("Server Filter")]
     public TelemetryEventType selectedEventType = TelemetryEventType.All;
@@ -59,8 +60,24 @@ public class Eventlogger : MonoBehaviour
     {
         AutoWire();
 
+        if (string.IsNullOrEmpty(userId))
+        {
+            // Try load
+            userId = PlayerPrefs.GetString("telemetry_user_id", "");
+
+            // If not found, create one
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = System.Guid.NewGuid().ToString();
+                PlayerPrefs.SetString("telemetry_user_id", userId);
+                PlayerPrefs.Save();
+            }
+        }
+
         if (string.IsNullOrEmpty(sessionId))
             sessionId = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+
+
     }
 
     void AutoWire()
@@ -113,6 +130,7 @@ public class Eventlogger : MonoBehaviour
         {
             ServerEventDTO dto = new ServerEventDTO
             {
+                user_id = userId,
                 session_id = sessionId,
                 event_type = e.type,
                 x = e.pos.x,
@@ -121,6 +139,7 @@ public class Eventlogger : MonoBehaviour
                 t = e.t,
                 meta = e.meta
             };
+
 
             string json = JsonUtility.ToJson(dto);
             Debug.Log("UPLOAD JSON:\n" + json);
@@ -168,8 +187,10 @@ public class Eventlogger : MonoBehaviour
             : "&event_type=" + selectedEventType.ToString();
 
         string url = serverDownloadUrl
-            + "?session_id=" + UnityWebRequest.EscapeURL(sid)
+             + "?session_id=" + UnityWebRequest.EscapeURL(sid)
+             + "&user_id=" + UnityWebRequest.EscapeURL(userId)
             + typeParam;
+
 
         Debug.Log("DOWNLOAD URL: " + url);
 

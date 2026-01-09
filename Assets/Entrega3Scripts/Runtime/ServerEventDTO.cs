@@ -1,6 +1,7 @@
 [System.Serializable]
 public class ServerEventDTO
 {
+    public string user_id;
     public string session_id;
     public string event_type;
     public float x;
@@ -13,5 +14,5 @@ public class ServerEventDTO
 [System.Serializable]
 public class ServerEventsResponse
 {
-    public ServerEventDTO[] events;
+    public ServerEventDTO[] events; 
 }

@@ -38,6 +38,10 @@ public class VisualizationEditor : Editor
                 "Download Session ID",
                 logger.downloadSessionId
             );
+        EditorGUILayout.LabelField("User / Session", EditorStyles.boldLabel);
+
+        logger.userId = EditorGUILayout.TextField("User ID", logger.userId);
+        EditorGUILayout.LabelField("Current Session ID", logger.sessionId);
 
         logger.enableServerUpload =
             EditorGUILayout.Toggle(
