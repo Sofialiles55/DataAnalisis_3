@@ -54,7 +54,7 @@ public class VisualizationEditor : Editor
             Handles.DrawAAPolyLine(v.pathWidth, pathPts);
         }
 
-        // Heatmap (disc overlap) 
+        // Heatmap 
         if (v.showHeatmap && pathPts.Length > 0)
         {
             

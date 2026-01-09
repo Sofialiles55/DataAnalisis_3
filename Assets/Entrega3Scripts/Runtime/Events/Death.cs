@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Death : MonoBehaviour
 {
-    public Eventlogger logger;
-
     [Header("Detection")]
-    public float teleportDistance = 6f;   
+    public float teleportDistance = 6f;
     public float cooldownSeconds = 1.0f;
 
     Vector3 lastPos;
@@ -20,7 +18,7 @@ public class Death : MonoBehaviour
 
     void Update()
     {
-        if (!logger) return;
+        if (Eventlogger.Instance == null) return;
 
         float moved = Vector3.Distance(transform.position, lastPos);
 
@@ -29,7 +27,7 @@ public class Death : MonoBehaviour
             lastLogTime = Time.time;
 
             // Log death at position before respawn
-            logger.LogDeath(lastPos, "respawn");
+            Eventlogger.Instance.LogDeath(lastPos, "respawn");
         }
 
         lastPos = transform.position;

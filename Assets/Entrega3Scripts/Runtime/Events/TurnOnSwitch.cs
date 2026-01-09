@@ -4,25 +4,30 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public Eventlogger logger;          
-    public string switchId = "";       
+    public string switchId = "";        
     public float cooldownSeconds = 1.0f;
 
     float lastLogTime = -999f;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!logger) return;
+        
+        if (Eventlogger.Instance == null) return;
 
-       
+        // Player detection
         if (!other.CompareTag("Player") && !other.transform.root.CompareTag("Player"))
             return;
 
+        // Prevent spam
         if (Time.time - lastLogTime < cooldownSeconds)
             return;
+
         lastLogTime = Time.time;
 
+       
         string id = string.IsNullOrWhiteSpace(switchId) ? gameObject.name : switchId;
-        logger.LogSwitch(transform.position, id);
+
+        // Log switch activation
+        Eventlogger.Instance.LogSwitch(transform.position, id);
     }
 }

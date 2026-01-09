@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TextPopUp : MonoBehaviour
 {
-    public Eventlogger logger;
     public string popupId = "Popup";
     public float cooldownSeconds = 2f;
 
@@ -12,17 +11,17 @@ public class TextPopUp : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!logger) return;
+        if (Eventlogger.Instance == null) return;
 
-        // player detection (tag recommended)
+        // player detection
         if (!other.CompareTag("Player") && !other.transform.root.CompareTag("Player"))
             return;
 
         if (Time.time - lastTime < cooldownSeconds) return;
         lastTime = Time.time;
 
-        // Log at player position (best for “where user saw it”)
+        // Log at player position
         Vector3 p = other.transform.root.position;
-        logger.LogPopup(p, popupId);
+        Eventlogger.Instance.LogPopup(p, popupId);
     }
 }
