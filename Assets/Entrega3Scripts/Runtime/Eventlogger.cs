@@ -25,12 +25,12 @@ public class Eventlogger : MonoBehaviour
     public string sessionId;
 
     [Header("Server Upload")]
-    public string serverUploadUrl = "http://localhost/telemetry/uploadEvents.php";
-    public bool enableServerUpload = false;
+    public string serverUploadUrl = "https://citmalumnes.upc.es/~duartemp/telemetry/uploadEvents.php";
+    public bool enableServerUpload = true;
 
     [Header("Server Download")]
-    public string serverDownloadUrl = "http://localhost/telemetry/downloadEvents.php";
-    public bool enableServerDownload = false;
+    public string serverDownloadUrl = "https://citmalumnes.upc.es/~duartemp/telemetry/downloadEvents.php";
+    public bool enableServerDownload = true;
 
     [Tooltip("Session ID to download from server (set this in inspector)")]
     public string downloadSessionId = "";
@@ -186,19 +186,20 @@ public class Eventlogger : MonoBehaviour
             ? ""
             : "&event_type=" + selectedEventType.ToString();
 
-        string url = serverDownloadUrl
-             + "?session_id=" + UnityWebRequest.EscapeURL(sid)
-             + "&user_id=" + UnityWebRequest.EscapeURL(userId)
-            + typeParam;
+        string url = serverDownloadUrl + "?user_id=" + UnityWebRequest.EscapeURL(userId);
 
+        // Only add session_id if explicitly requested
+        if (!string.IsNullOrWhiteSpace(sid))
+        {
+            url += "&session_id=" + UnityWebRequest.EscapeURL(sid);
+        }
+
+        url += typeParam;
 
         Debug.Log("DOWNLOAD URL: " + url);
 
         if (!enableServerDownload)
-        {
-            Debug.LogWarning("enableServerDownload = false (no server call)");
             yield break;
-        }
 
         using (UnityWebRequest req = UnityWebRequest.Get(url))
         {
@@ -216,7 +217,7 @@ public class Eventlogger : MonoBehaviour
             ServerEventsResponse resp =
                 JsonUtility.FromJson<ServerEventsResponse>(json);
 
-            if (resp == null || resp.events == null)
+            if (resp?.events == null)
             {
                 Debug.LogWarning("No events received.");
                 yield break;
@@ -236,24 +237,18 @@ public class Eventlogger : MonoBehaviour
                 });
             }
 
-            Debug.Log($"Downloaded {resp.events.Length} events");
+            Debug.Log($"Downloaded {resp.events.Length} events (all sessions)");
         }
     }
-
 
     public void DownloadFiltered()
     {
         if (!visualizer) return;
 
+        // If downloadSessionId is empty it should download all our sessions
         string sid = string.IsNullOrWhiteSpace(downloadSessionId)
-            ? sessionId
+            ? ""
             : downloadSessionId;
-
-        if (string.IsNullOrWhiteSpace(sid))
-        {
-            Debug.LogWarning("No session id to download.");
-            return;
-        }
 
         StartCoroutine(DownloadFilteredCoroutine(sid));
     }
